@@ -233,7 +233,15 @@ gaint gxload(char *gxdopt, char *gxpopt) {
   if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(1);}
   psubs.gxpch    = dlsym(phandle,"gxpch");    
   if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(1);}
+  psubs.gxpu8    = dlsym(phandle,"gxpu8"); // KKA    
+  if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(1);}
   psubs.gxpqchl  = dlsym(phandle,"gxpqchl");  
+  if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(1);}
+  psubs.gxpqchh  = dlsym(phandle,"gxpqchh"); // KKA 
+  if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(1);}
+  psubs.gxpqu8l  = dlsym(phandle,"gxpqu8l"); // KKA  
+  if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(1);}
+  psubs.gxpqu8h  = dlsym(phandle,"gxpqu8h"); // KKA  
   if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(1);}
   
   /* get pointers to the display (hardware) subroutines, some are needed even in batch mode */
@@ -255,6 +263,12 @@ gaint gxload(char *gxdopt, char *gxpopt) {
   if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(2);}
   dsubs.gxdch    = dlsym(dhandle,"gxdch"); 
   if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(2);}
+  dsubs.gxdchv   = dlsym(dhandle,"gxdchv"); // KKA
+  if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(2);}
+  dsubs.gxdu8    = dlsym(dhandle,"gxdu8");  /* KKA */
+  if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(2);} /* KKA */
+  dsubs.gxdu8v   = dlsym(dhandle,"gxdu8v");  /* KKA */
+  if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(2);} /* KKA */
   dsubs.gxdclip  = dlsym(dhandle,"gxdclip"); 
   if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(2);}
   dsubs.gxdcol   = dlsym(dhandle,"gxdcol"); 
@@ -288,6 +302,12 @@ gaint gxload(char *gxdopt, char *gxpopt) {
   dsubs.gxdptn   = dlsym(dhandle,"gxdptn"); 
   if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(2);}
   dsubs.gxdqchl  = dlsym(dhandle,"gxdqchl"); 
+  if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(2);}
+  dsubs.gxdqchh  = dlsym(dhandle,"gxdqchh"); 
+  if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(2);}
+  dsubs.gxdqu8l  = dlsym(dhandle,"gxdqu8l"); // KKA
+  if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(2);}
+  dsubs.gxdqu8h  = dlsym(dhandle,"gxdqu8h"); // KKA
   if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(2);}
   dsubs.gxdrbb   = dlsym(dhandle,"gxdrbb"); 
   if ((err=dlerror())!=NULL) {printf("Error in gxload: %s\n",err); return(2);}
@@ -381,6 +401,22 @@ gadouble wid;
   return (wid);
 }
 
+/* Query the height of a character (KKA) */
+gadouble gxqchh (char ch, gaint fn, gadouble w) {
+gadouble hgt;
+
+  /* cases where we want to use Hershey fonts */
+  if (fn==3) return (-999.9);                  /* symbol font */
+  if (fn>5 && fn<10) return (-999.9);          /* user-defined font file */
+  if (fn<6 && !gxdbqhersh()) return (-999.9);  /* font 0-5 and hershflag=0 in gxmeta.c */
+
+  if (intflg) 
+    hgt = dsubs.gxdqchh (ch, fn, w);           /* get the character hgt (interactive mode) */
+  else 
+    hgt = psubs.gxpqchh (ch, fn, w);           /* get the character hgt (batch mode) */
+  return (hgt);
+}
+
 /* Draw a character */
 gadouble gxdrawch (char ch, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
 gadouble wid;
@@ -405,6 +441,132 @@ gadouble wid;
   else return(0);
 }
 
+/* Draw a character vertically (KKA) */
+gadouble gxdrawchv (char ch, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
+gadouble hgt;
+
+  /* cases where we want to use Hershey fonts */ 
+  if (fn==3) return (-999.9);                  /* symbol font */
+  if (fn>5 && fn<10) return (-999.9);          /* user-defined font file */
+  if (fn<6 && !gxdbqhersh()) return (-999.9);  /* font 0-5 and hershflag=0 in gxmeta.c */
+
+  /* from here on we're using Cairo fonts */
+  gxvcon(x,y,&x,&y);                           /* scale the position and size for the virual page */
+  gxvcon2(w,h,&w,&h);
+  if (w>0 && h>0) {                            /* make sure the width and height are non-zero */
+    if (intflg) 
+      hgt = dsubs.gxdchv (ch, fn, x, y, w, h, rot);   /* plot a character */
+    else 
+      hgt = psubs.gxpqchh (ch, fn, h);         /* get the character height (batch mode) */
+    //printf ("gxdrawchv: %lf\n",hgt);
+    houtch (ch, fn, x, y, w, h, rot);          /* put the character in the metabuffer */
+    gxppvp2h(hgt,&hgt);                        /* rescale the character height back to real page size */
+    return (hgt);                              /* return character width */
+  }
+  else return(0);
+}
+
+/* Query the width of a character string (UTF-8) */
+/* KKA 09/03/2022 */
+gadouble gxqu8l (char* ch, gaint fn, gadouble w) {
+gadouble wid;
+
+  /* cases where we want to use Hershey fonts */
+  if (fn==3) return (-999.9);                  /* symbol font */
+  if (fn>5 && fn<10) return (-999.9);          /* user-defined font file */
+  if (fn<6 && !gxdbqhersh()) return (-999.9);  /* font 0-5 and hershflag=0 in gxmeta.c */
+
+  if (intflg) 
+    wid = dsubs.gxdqu8l (ch, fn, w);           /* get the symbol width (interactive mode) */
+  else 
+    wid = psubs.gxpqu8l (ch, fn, w);           /* get the symbol width (batch mode) */
+  return (wid);
+}
+
+/* Query the height of a character string (UTF-8) */
+/* KKA 09/04/2022 */
+gadouble gxqu8h (char* ch, gaint fn, gadouble w) {
+gadouble hgt;
+
+  /* cases where we want to use Hershey fonts */
+  if (fn==3) return (-999.9);                  /* symbol font */
+  if (fn>5 && fn<10) return (-999.9);          /* user-defined font file */
+  if (fn<6 && !gxdbqhersh()) return (-999.9);  /* font 0-5 and hershflag=0 in gxmeta.c */
+
+  if (intflg) 
+    hgt = dsubs.gxdqu8h (ch, fn, w);           /* get the symbol hgt (interactive mode) */
+  else 
+    hgt = psubs.gxpqu8h (ch, fn, w);           /* get the symbol hgt (batch mode) */
+  return (hgt);
+}
+
+/* Draw an UTF-8 symbol */
+/* KKA (09/02/2023)     */
+gadouble gxdrawu8 (char* ch, char len, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
+gadouble wid;
+int b1,b2,b3;
+
+  /* cases where we want to use Hershey fonts */ 
+  if (fn==3) return (-999.9);                  /* symbol font */
+  if (fn>5 && fn<10) return (-999.9);          /* user-defined font file */
+  if (fn<6 && !gxdbqhersh()) return (-999.9);  /* font 0-5 and hershflag=0 in gxmeta.c */
+  
+  /* from here on we're using Cairo fonts */
+  gxvcon(x,y,&x,&y);                           /* scale the position and size for the virual page */
+  gxvcon2(w,h,&w,&h);
+  if (w>0 && h>0) {                            /* make sure the width and height are non-zero */
+    if (intflg) 
+      wid = dsubs.gxdu8 (ch, fn, x, y, w, h, rot);   /* plot a character */
+    else 
+      wid = psubs.gxpqu8l (ch, fn, w);         /* get the character width (batch mode) */
+    houtu8 (ch, len, fn, x, y, w, h, rot);     /* put the symbol in the metabuffer */
+    gxppvp2(wid,&wid);                         /* rescale the character width back to real page size */
+    return (wid);                              /* return character width */
+  }
+  else return(0);
+}
+
+/* Draw an UTF-8 symbol vertically  */
+/* KKA (09/04/2023)                 */
+gadouble gxdrawu8v (char* ch, char len, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
+gadouble hgt;
+int b1, b2, b3;
+
+  /* cases where we want to use Hershey fonts */ 
+  if (fn==3) return (-999.9);                  /* symbol font */
+  if (fn>5 && fn<10) return (-999.9);          /* user-defined font file */
+  if (fn<6 && !gxdbqhersh()) return (-999.9);  /* font 0-5 and hershflag=0 in gxmeta.c */
+  
+  // special case: prolonged sound symbol must be rotated by an additional pi/2
+  if (len == '3') {
+    if (*ch != '\0' && *(ch+1) != '\0' && *(ch+2) != '\0') {
+      b1 = (int)(*ch)     + 256;
+      b2 = (int)(*(ch+1)) + 256;
+      b3 = (int)(*(ch+2)) + 256;
+      if (b1 == 227 && b2 == 131 && b3 == 188) {
+        // we also need to offset the symbol position.
+        // let's use the width of the symbol.
+        x += cos(rot)*gxqu8l(ch, fn, w);
+        y += sin(rot)*gxqu8l(ch, fn, w);
+        rot += 1.570796; // update the rotation amount.
+      }
+    }
+  }
+
+  /* from here on we're using Cairo fonts */
+  gxvcon(x,y,&x,&y);                           /* scale the position and size for the virual page */
+  gxvcon2(w,h,&w,&h);
+  if (w>0 && h>0) {                            /* make sure the width and height are non-zero */
+    if (intflg) 
+      hgt = dsubs.gxdu8v (ch, fn, x, y, w, h, rot);   /* plot a character */
+    else 
+      hgt = psubs.gxpqu8h (ch, fn, h);         /* get the character hgt (batch mode) */
+    houtu8 (ch, len, fn, x, y, w, h, rot);     /* put the symbol in the metabuffer */
+    gxppvp2h(hgt,&hgt);                        /* rescale the character hgt back to real page size */
+    return (hgt);                              /* return character hgt */
+  }
+  else return(0);
+}
 
 /* Frame action.  Values for action are:
       0 -- new frame (clear display), wait before clearing.
@@ -777,6 +939,9 @@ void gxppvp (gadouble x, gadouble y, gadouble *s, gadouble *t) {   /* positions,
 
 void gxppvp2 (gadouble x, gadouble *s) {  /* character width, virtual->real */
   *s = (x)/vxm;
+}
+void gxppvp2h (gadouble y, gadouble *s) {  /* KKA: character height, virtual->real */
+  *s = (y)/vym;
 }
 
 

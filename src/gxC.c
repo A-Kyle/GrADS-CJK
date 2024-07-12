@@ -821,7 +821,6 @@ void gxCaa (gaint flag) {
 
 
 /* Get the x bearing (width) used to plot a character in the specific font and size */
-
 gadouble gxCqchl (char ch, gaint fn, gadouble w) {
 cairo_text_extents_t te;
 gadouble usize,awidth,swidth,fontsize=100.0;
@@ -847,11 +846,90 @@ char *astr = "A";
   return(swidth);
 }
 
+/* Get the y bearing (height) used to plot a character in the specific font and size */
+/* KKA */
+gadouble gxCqchh (char ch, gaint fn, gadouble h) {
+cairo_text_extents_t te;
+gadouble vsize,aheight,sheight,fontsize=100.0;
+char str[2];
+char *astr = "A";
+
+  gxCselfont (fn);
+
+  /* get the scale factor (for hgt only) based on the size of "A" */
+  cairo_set_font_size (cr, fontsize);
+  cairo_text_extents (cr, astr, &te);
+  aheight = fontsize/te.height; 
+  vsize = h * aheight * yscl;
+  if (brdrflg) vsize = vsize*(((gadouble)height-brdrwid*2.0)/(gadouble)height);
+
+  /* get the text extents of the character */
+  str[0] = ch;
+  str[1] = '\0';
+  cairo_text_extents (cr, str, &te);
+
+  /* return the scaled hgt of the character */
+  // sheight = te.height*vsize/(fontsize*yscl);
+  sheight = (1.18*fontsize/aheight)*vsize/(fontsize*yscl);
+  return(sheight);
+}
+
+/* Get the x bearing (width) used to plot a UTF-8 symbol in the specific font and size */
+/* KKA 09/03/2023 */
+gadouble gxCqu8l (char* ustr, gaint fn, gadouble w) {
+cairo_text_extents_t te;
+gadouble usize,awidth,swidth,fontsize=100.0;
+char *astr = "A";
+
+  gxCselfont (fn);
+
+  /* get the scale factor (for width only) based on the size of "A" */
+  cairo_set_font_size (cr, fontsize);
+  cairo_text_extents (cr, astr, &te);
+  awidth = fontsize/te.width; 
+  usize = w * awidth * xscl;
+  if (brdrflg) usize = usize*(((gadouble)width-brdrwid*2.0)/(gadouble)width);
+
+  /* get the text extents of the symbol */
+  cairo_text_extents (cr, ustr, &te);
+  
+  /* return the scaled width of the character */
+  swidth = te.x_advance*usize/(fontsize*xscl);
+  return(swidth);
+}
+
+/* Get the y bearing (height) used to plot a UTF-8 symbol in the specific font and size */
+/* KKA 09/04/2023 */
+gadouble gxCqu8h (char* ustr, gaint fn, gadouble h) {
+cairo_text_extents_t te;
+gadouble vsize,aheight,sheight,fontsize=100.0;
+char *astr = "A";
+
+  gxCselfont (fn);
+
+  /* get the scale factor (for width only) based on the size of "A" */
+  cairo_set_font_size (cr, fontsize);
+  cairo_text_extents (cr, astr, &te);
+  aheight = fontsize/te.height; 
+  vsize = h * aheight * yscl;
+  if (brdrflg) vsize = vsize*(((gadouble)height-brdrwid*2.0)/(gadouble)height);
+
+  /* get the text extents of the symbol */
+  cairo_text_extents (cr, ustr, &te);
+  
+  /* return the scaled width of the character */
+  // sheight = te.height*vsize/(fontsize*yscl);
+  sheight = (1.18*fontsize/aheight)*vsize/(fontsize*yscl);
+  if (te.y_advance > 0.01) { 
+    sheight = te.y_advance*vsize/(fontsize*yscl);
+  }
+  return(sheight);
+}
+
 /* Draw a character. 
    Specify a large font size and then scale it down, to prevent 
    the pixelation from interfereing with the exact positioning.
    Not much code, but it took a lot of work to get this right.  */
-
 gadouble gxCch (char ch, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
 cairo_text_extents_t te;
 gadouble xpage,ypage,usize,vsize;
@@ -899,6 +977,158 @@ char *astr = "A";
   return(swidth);
 }
 
+/* Draw a character vertically (KKA) 
+   Specify a large font size and then scale it down, to prevent 
+   the pixelation from interfereing with the exact positioning.
+   Not much code, but it took a lot of work to get this right.  */
+gadouble gxCchv (char ch, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
+cairo_text_extents_t te;
+gadouble xpage,ypage,usize,vsize;
+gadouble aheight,awidth,sheight,fontsize=100.0;
+char str[2];
+char *astr = "A";
+
+  if (drawing) cairo_stroke(cr);
+  drawing = 0;
+  gxCselfont (fn);
+
+  /* get the scale factor based on size of "A" */
+  cairo_set_font_size (cr, fontsize);
+  cairo_text_extents (cr, astr, &te);
+  awidth  = fontsize/te.width;
+  aheight = fontsize/te.height;
+  usize = w * xscl * awidth;
+  vsize = h * yscl * aheight;
+  if (brdrflg) {
+    usize = usize*(((gadouble)width-brdrwid*2.0)/(gadouble)width);
+    vsize = vsize*(((gadouble)height-brdrwid*2.0)/(gadouble)height);
+  }
+  /* Convert the position coordinates and adjust the rotation if necessary */
+  gxCxycnv (x,y,&xpage,&ypage);
+  if (rotate) rot = rot + M_PI/2;
+
+  /* get the text extents of the character we want to draw */
+  str[0] = ch;
+  str[1] = '\0';
+  cairo_text_extents (cr, str, &te);
+
+  /* draw a character */
+  cairo_save(cr);                                    /* save the untranslated, unrotated, unclipped context */
+  cairo_rectangle(cr,clx,cly,clw,clh);               /* set the clipping area */
+  cairo_clip (cr);                                   /* clip it */
+  cairo_translate(cr,xpage,ypage);                   /* translate to location of character */
+  cairo_rotate(cr,-1.0*rot);                         /* rotate if necessary */
+  cairo_move_to (cr, 0.0, 0.0);                      /* move to (translated) origin */
+  cairo_scale (cr, usize/fontsize, vsize/fontsize);  /* apply the scale factor right before drawing */
+  cairo_show_text (cr, str);                         /* finally, draw the darned thing */
+  cairo_restore(cr);                                 /* restore the saved graphics context */
+
+  /* return the scaled height of the character */
+  //sheight = te.height*vsize/(fontsize*yscl);
+  sheight = (1.18*fontsize/aheight)*vsize/(fontsize*yscl);
+  return(sheight);
+}
+
+
+/* Draw an UTF-8 symbol (multiple characters). */
+/* KKA 09/02/2023 */
+gadouble gxCu8 (char* ustr, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
+cairo_text_extents_t te;
+gadouble xpage,ypage,usize,vsize;
+gadouble aheight,awidth,swidth,fontsize=100.0;
+char *astr = "A";
+//char str[2];
+
+  if (drawing) cairo_stroke(cr);
+  drawing = 0;
+  gxCselfont (fn);
+
+  /* get the scale factor based on size of "A" */
+  cairo_set_font_size (cr, fontsize);
+  cairo_text_extents (cr, astr, &te);
+  awidth  = fontsize/te.width;
+  aheight = fontsize/te.height;
+  usize = w * xscl * awidth;
+  vsize = h * yscl * aheight;
+  if (brdrflg) {
+    usize = usize*(((gadouble)width-brdrwid*2.0)/(gadouble)width);
+    vsize = vsize*(((gadouble)height-brdrwid*2.0)/(gadouble)height);
+  }
+  /* Convert the position coordinates and adjust the rotation if necessary */
+  gxCxycnv (x,y,&xpage,&ypage);
+  if (rotate) rot = rot + M_PI/2;
+
+  /* get the text extents of the character we want to draw */
+  //str[0] = 'A';
+  //str[1] = '\0';
+  //cairo_text_extents(cr, str, &te);
+  cairo_text_extents (cr, ustr, &te);
+  
+  /* draw a character */
+  cairo_save(cr);                                    /* save the untranslated, unrotated, unclipped context */
+  cairo_rectangle(cr,clx,cly,clw,clh);               /* set the clipping area */
+  cairo_clip (cr);                                   /* clip it */
+  cairo_translate(cr,xpage,ypage);                   /* translate to location of character */
+  cairo_rotate(cr,-1.0*rot);                         /* rotate if necessary */
+  cairo_move_to (cr, 0.0, 0.0);                      /* move to (translated) origin */
+  cairo_scale (cr, usize/fontsize, vsize/fontsize);  /* apply the scale factor right before drawing */
+  cairo_show_text (cr, ustr);                        /* finally, draw the darned thing */
+  cairo_restore(cr);                                 /* restore the saved graphics context */
+
+  /* return the scaled width of the character */
+  swidth = te.x_advance*usize/(fontsize*xscl);
+  return(swidth);
+}
+
+/* Draw an UTF-8 symbol vertically. */
+/* KKA 09/04/2023 */
+gadouble gxCu8v (char* ustr, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
+cairo_text_extents_t te;
+gadouble xpage,ypage,usize,vsize;
+gadouble aheight,awidth,sheight,fontsize=100.0;
+char *astr = "A";
+
+  if (drawing) cairo_stroke(cr);
+  drawing = 0;
+  gxCselfont (fn);
+
+  /* get the scale factor based on size of "A" */
+  cairo_set_font_size (cr, fontsize);
+  cairo_text_extents (cr, astr, &te);
+  awidth  = fontsize/te.width;
+  aheight = fontsize/te.height;
+  usize = w * xscl * awidth;
+  vsize = h * yscl * aheight;
+  if (brdrflg) {
+    usize = usize*(((gadouble)width-brdrwid*2.0)/(gadouble)width);
+    vsize = vsize*(((gadouble)height-brdrwid*2.0)/(gadouble)height);
+  }
+  /* Convert the position coordinates and adjust the rotation if necessary */
+  gxCxycnv (x,y,&xpage,&ypage);
+  if (rotate) rot = rot + M_PI/2;
+
+  /* get the text extents of the character we want to draw */
+  cairo_text_extents (cr, ustr, &te);
+  
+  /* draw a character */
+  cairo_save(cr);                                    /* save the untranslated, unrotated, unclipped context */
+  cairo_rectangle(cr,clx,cly,clw,clh);               /* set the clipping area */
+  cairo_clip (cr);                                   /* clip it */
+  cairo_translate(cr,xpage,ypage);                   /* translate to location of character */
+  cairo_rotate(cr,-1.0*rot);                         /* rotate if necessary */
+  
+  cairo_scale (cr, usize/fontsize, vsize/fontsize);  /* apply the scale factor right before drawing */
+  cairo_show_text (cr, ustr);                        /* finally, draw the darned thing */
+  cairo_restore(cr);                                 /* restore the saved graphics context */
+
+  /* return the scaled width of the character */
+  // sheight = te.height*vsize/(fontsize*yscl);
+  sheight = (1.18*fontsize/aheight)*vsize/(fontsize*yscl);
+  if (te.y_advance > 0.01) { 
+    sheight = te.y_advance*vsize/(fontsize*yscl);
+  }
+  return(sheight);
+}
 
 /* Set the Cairo font based on the font number and the settings 
    obtained from the backend database settings */

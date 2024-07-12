@@ -566,9 +566,26 @@ void gxdimg(gaint *im, gaint imin, gaint jmin, gaint isiz, gaint jsiz) {
 }
 
 /* Get the x bearing (width) used to plot a character */
-
 gadouble gxdqchl (char ch, gaint fn, gadouble w) {
   return (gxCqchl(ch,fn,w)); 
+}
+
+/* Get the y bearing (height) used to plot a character */
+/* KKA 09/04/2023       */
+gadouble gxdqchh (char ch, gaint fn, gadouble w) {
+  return (gxCqchh(ch,fn,w)); 
+}
+
+/* Get the x bearing (width) used to plot UTF-8 symbol */
+/* KKA 09/03/2023       */
+gadouble gxdqu8l (char* ch, gaint fn, gadouble w) {
+  return (gxCqu8l(ch,fn,w)); 
+}
+
+/* Get the y bearing (height) used to plot UTF-8 symbol */
+/* KKA 09/04/2023       */
+gadouble gxdqu8h (char* ch, gaint fn, gadouble w) {
+  return (gxCqu8h(ch,fn,w)); 
 }
 
 /* Plot a character */
@@ -578,6 +595,34 @@ gadouble xadv;
   xadv = gxCch(ch,fn,x,y,w,h,rot);   /* draw character with Cairo, width of character returned */
   if (QLength(display)&&rstate) gxdeve(0);
   return (xadv);
+}
+
+/* Plot a character vertically (KKA) */
+gadouble gxdchv (char ch, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
+gadouble yadv;
+  yadv = gxCchv(ch,fn,x,y,w,h,rot);   /* draw character with Cairo, height of character returned */
+  if (QLength(display)&&rstate) gxdeve(0);
+  return (yadv);
+}
+
+/* Plot an UTF-8 symbol */
+/* KKA 09/02/2023       */
+gadouble gxdu8 (char* ustr, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
+gadouble xadv;
+
+  xadv = gxCu8(ustr,fn,x,y,w,h,rot);   /* draw symbol with Cairo, width of symbol returned */
+  if (QLength(display)&&rstate) gxdeve(0);
+  return (xadv);
+}
+
+/* Plot an UTF-8 symbol vertically  */
+/* KKA 09/02/2023                   */
+gadouble gxdu8v (char* ustr, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
+gadouble yadv;
+
+  yadv = gxCu8v(ustr,fn,x,y,w,h,rot);   /* draw symbol with Cairo, width of symbol returned */
+  if (QLength(display)&&rstate) gxdeve(0);
+  return (yadv);
 }
 
 /* Flush pending graphics; called from gxC and gxX */

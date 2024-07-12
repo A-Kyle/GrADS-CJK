@@ -4977,11 +4977,11 @@ gadouble *gr;
 
   if (pcm->ffile != stdout) {
     if (pcm->fwname) {
-      snprintf(pout,1255,"Wrote %ld of %i elements to ", written, exsz);
+      snprintf(pout,1255,"Wrote %ld of %i elements to ", (long) written, exsz);
       gaprnt (2,pout);
       gaprnt (2,pcm->fwname);
     } else {
-      snprintf(pout,1255,"Wrote %ld of %i elements to grads.fwrite", written, exsz);
+      snprintf(pout,1255,"Wrote %ld of %i elements to grads.fwrite", (long) written, exsz);
       gaprnt (2,pout);
     }
   

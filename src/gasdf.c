@@ -859,7 +859,7 @@ utUnit timeunit ;
 	  if (!temp_str) {
 	    trunc_point = strlen(time_units) ;
 	  } else {
-	    trunc_point = strlen(time_units)-strlen(temp_str)+1;
+	    trunc_point = strlen(time_units)-strlen(temp_str);
 	  }
 	  sz = trunc_point+1;
           trunc_units = (char *) galloc(sz,"trunc_units");

@@ -105,9 +105,21 @@ void gxpend (void) {
 gadouble gxpch (char ch, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
   return 0;
 }
+gadouble gxpu8 (char* ch, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
+  return 0;
+} // KKA 
 gadouble gxpqchl (char ch, gaint fn, gadouble w) {
   return -999;
 }
+gadouble gxpqchh (char ch, gaint fn, gadouble w) {
+  return -999; 
+} // KKA
+gadouble gxpqu8l (char* ch, gaint fn, gadouble w) {
+  return -999;
+} // KKA
+gadouble gxpqu8h (char* ch, gaint fn, gadouble w) {
+  return -999;
+} // KKA
 void gxpclip (gadouble x1, gadouble x2, gadouble y1, gadouble y2) { 
 }
 

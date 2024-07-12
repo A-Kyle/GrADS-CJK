@@ -2741,6 +2741,7 @@ void gxdssh (int cnt) {
 }
 
 void gxdsfr (int frame) {
+  
   if (batch) {
     printf("Error: the screen command does not work in batch mode\n");
     return;
@@ -3129,9 +3130,28 @@ int i,j,col;
 gadouble gxdch (char ch, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
   return (-999); 
 }
+gadouble gxdu8 (char* ustr, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
+  return (-999); 
+} /* KKA 09/02/2023 */
+gadouble gxdchv (char ch, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
+  return (-999); 
+} /* vertical lines; KKA 09/04/2023 */
+gadouble gxdu8v (char* ustr, gaint fn, gadouble x, gadouble y, gadouble w, gadouble h, gadouble rot) {
+  return (-999); 
+} /* vertical lines; KKA 09/02/2023 */
+
 gadouble gxdqchl (char ch, gaint fn, gadouble w) {
   return (-999); 
 }
+gadouble gxdqchh (char ch, gaint fn, gadouble w) {
+  return (-999); 
+} /* KKA 09/04/2023 */
+gadouble gxdqu8l (char* ch, gaint fn, gadouble w) {
+  return (-999); 
+} /* KKA 09/03/2023 */
+gadouble gxdqu8h (char* ch, gaint fn, gadouble w) {
+  return (-999); 
+} /* KKA 09/04/2023 */
 void gxdopt (gaint opt) {
 }
 void gxsetpatt(gaint pnum) {

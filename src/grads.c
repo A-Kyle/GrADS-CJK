@@ -48,7 +48,7 @@ void write_command_log(char *logfile);
 
 static struct gaupb *upba=NULL;     /* Anchor for user defined plug-in */
 char *gxgnam(char *);               /* This is also in gx.h */
-static struct gacmn gcmn;  
+struct gacmn gcmn;  
 static struct gawgds wgds; 
 extern struct gamfcmn mfcmn;
 
@@ -207,7 +207,7 @@ int main (int argc, char *argv[])  {
  
   printf("\nGrid Analysis and Display System (GrADS) Version %s\n",gatxtl(GRADS_VERSION,0));
   printf("Copyright (C) 1988-2018 by George Mason University\n");
-  printf("GrADS comes with ABSOLUTELY NO WARRANTY\n");
+  printf("GrADS comes with ABSOLUTELY NO warranty\n");
   printf("See file COPYRIGHT for more information\n\n");
   
   gacfg(0);

@@ -15,6 +15,9 @@ void gxdbat () {}
 void gxdbgn (gadouble a, gadouble b) {}
 void gxdbtn (gaint a, gadouble *b, gadouble *c, gaint *d, gaint *e, gaint *f, gadouble *g) {}
 gadouble gxdch (char a, gaint b, gadouble c, gadouble d, gadouble e, gadouble f, gadouble g) {return 0;}
+gadouble gxdchv (char a, gaint b, gadouble c, gadouble d, gadouble e, gadouble f, gadouble g) {return 0;} // KKA
+gadouble gxdu8 (char* a, gaint b, gadouble c, gadouble d, gadouble e, gadouble f, gadouble g) {return 0;} // KKA
+gadouble gxdu8v (char* a, gaint b, gadouble c, gadouble d, gadouble e, gadouble f, gadouble g) {return 0;} // KKA
 void gxdclip (gadouble a, gadouble b, gadouble c, gadouble d) {}
 void gxdcol (int a) {}
 void gxddbl () {}
@@ -31,6 +34,9 @@ void gxdopt (gaint a) {}
 void gxdpbn (int a, struct gbtn *b , int c, int d, int e) {}
 void gxdptn (int a, int b, int c) {}
 gadouble gxdqchl (char a, gaint b, gadouble c) {return 0;}
+gadouble gxdqchh (char a, gaint b, gadouble c) {return 0;} // KKA
+gadouble gxdqu8l (char* a, gaint b, gadouble c) {return 0;} // KKA
+gadouble gxdqu8h (char* a, gaint b, gadouble c) {return 0;} // KKA
 void gxdrbb (gaint a, gaint b, gadouble c, gadouble d, gadouble e, gadouble f, gaint g) {}
 void gxdrec (gadouble a, gadouble b, gadouble c, gadouble d) {}
 void gxdrmu (int a, struct gdmu *b, int c, int d) {}
@@ -65,4 +71,8 @@ void gxpflush () {}
 void gxpsignal (gaint a) {}
 void gxpclip (gadouble a, gadouble b, gadouble c, gadouble d) {}
 gadouble gxpch (char a, gaint b, gadouble c, gadouble d, gadouble e, gadouble f, gadouble g) {return 0;}
+gadouble gxpu8 (char* a, gaint b, gadouble c, gadouble d, gadouble e, gadouble f, gadouble g) {return 0;} // KKA
 gadouble gxpqchl (char a, gaint b, gadouble c) {return 0;}
+gadouble gxpqchh (char a, gaint b, gadouble c) {return 0;} // KKA
+gadouble gxpqu8l (char* a, gaint b, gadouble c) {return 0;} // KKA
+gadouble gxpqu8h (char* a, gaint b, gadouble c) {return 0;} // KKA

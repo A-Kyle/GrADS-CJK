@@ -353,7 +353,9 @@ FILE *pdefid=NULL;
       }
       if (i==1) dsubs->gxdssv(fnum);
       if (i==2) dsubs->gxdssh(fnum);
-      if (i==3) dsubs->gxdsfr(fnum);
+      if (i==3) {
+        dsubs->gxdsfr(fnum);
+      }
       gxfrme(9);
     } else {
       gaprnt (0,"Screen Error: Unknown keyword\n");
@@ -1358,6 +1360,7 @@ char shparg[4096];
     swide = 0.2;
     gxchln (cmd,len,pcm->strhsz,&swide);
     shite = pcm->strvsz;
+    //printf("%lf %lf\n",shite,swide);
 
     ang = pcm->strrot*M_PI/180.0;
     x = x - justx[pcm->strjst] * swide * cos(ang);
@@ -1370,6 +1373,46 @@ char shparg[4096];
 
     errst:
     gaprnt (0,"DRAW error: Syntax is DRAW STRING x y string\n");
+    return (1);
+  }
+  if (cmpwrd("vstring",oper)) { /* vertical string: KKA 09/04/2023 */
+    if ((cmd = nxtwrd (cmd)) == NULL) goto errstv;
+    if (getdbl(cmd,&x) == NULL ) goto errstv;
+    if ((cmd = nxtwrd (cmd)) == NULL) goto errstv;
+    if (getdbl(cmd,&y) == NULL ) goto errstv;
+    if ((cmd = nxtwrd (cmd)) == NULL) goto errstv;
+    c1 = cmd;
+    len=0;
+    while (*c1!='\0' && *c1!='\n') {len++; c1++;}
+    gxwide (pcm->strthk);
+    gxcolr (pcm->strcol);
+
+    shite = 0.2;
+    gxchlnv (cmd,len,pcm->strvsz,&shite); // shite contains the length (h) of the string... not the other thing :/
+    gxchlnvw (cmd,len,pcm->strhsz,&swide); // width of the string
+    //printf("%lf %lf\n",shite,swide);
+
+    ang = pcm->strrot*M_PI/180.0;
+
+    /* for vertical text, need to offset the initial 
+     * position by the height of the first symbol. */
+    x += pcm->strvsz * sin(ang);
+    y -= pcm->strvsz * cos(ang);
+
+    x = x - justx[pcm->strjst] * swide;
+    y = y + (1.0 - justy[pcm->strjst]) * shite;
+   
+    x = x - ((1.0 - justy[pcm->strjst]) * shite * sin(ang)) 
+          - (       justx[pcm->strjst]  * swide * (cos(ang)-1.0));
+    
+    y = y + ((1.0 - justy[pcm->strjst]) * shite * (cos(ang)-1.0)) 
+          - (       justx[pcm->strjst]  * swide * sin(ang));
+
+    gxchplv (cmd,len,x,y,pcm->strvsz,pcm->strhsz,pcm->strrot);
+    return (0);
+
+    errstv:
+    gaprnt (0,"DRAW error: Syntax is DRAW VSTRING x y string\n");
     return (1);
   }
   if (cmpwrd("rec",oper)) {

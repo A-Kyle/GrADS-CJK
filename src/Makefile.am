@@ -82,6 +82,7 @@ DISTCLEANFILES = buildinfo.h config.h
 
 ## Paths to external headers and libraries
 
+SUPPLIBS                = /usr
 supp_include_dir	= $(SUPPLIBS)/include
 supp_lib_dir		= $(SUPPLIBS)/lib
 LDADD			= -L$(supp_lib_dir) $(geotiff_ldflags) $(gd_ldflags)

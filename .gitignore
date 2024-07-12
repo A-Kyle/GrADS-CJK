@@ -17,8 +17,10 @@ src/grib2scan
 src/gribmap
 src/gribscan
 src/stnmap
-src/Makefile
+src/Makefile*
 src/stamp-h1
+src/buildinfo.h
+src/.libs/
 grads_log.txt
 config.*
 udpt
