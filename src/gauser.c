@@ -2843,6 +2843,7 @@ struct dt dtim;
 struct xinfo xinf;
 struct gdlg dlg; 
 struct gaattr *attr;
+gaint cn; 
 struct gxdbquery dbq;
 gadouble (*conv) (gadouble *, gadouble);
 gadouble x, y, v, v1, v2, lon, lat, rinfo[10];
@@ -2914,6 +2915,8 @@ gadouble minvals[4], maxvals[4],dval;
     gaprnt (2,"  q gr2w     Converts grid to world coordinates\n");
     gaprnt (2,"  q gr2xy    Converts grid to XY screen coordinates\n");
     gaprnt (2,"  q pp2xy    Converts virtual page XY to real page XY coordinates\n");
+    gaprnt (2,"  q rgb      Returns RGB(A) info about a defined color\n");
+    gaprnt (2,"  q mem      memory info\n");
     gaprnt (2,"Details about argument syntax for some of these options are in the \n");
     gaprnt (2,"online documentation: http://cola.gmu.edu/grads/gadoc/gradcomdquery.html\n");
   }
@@ -2929,6 +2932,35 @@ gadouble minvals[4], maxvals[4],dval;
     gaprnt(2,pout);
     snprintf(pout,1255,"pcm->lincol is %d\n",pcm->lincol);
     gaprnt(2,pout);
+  }
+  else if (cmpwrd(arg,"rgb")) {
+    if ((arg = nxtwrd (arg)) == NULL) {
+      gaprnt (0,"QUERY error: Syntax is QUERY RGB color#\n");
+      return (1);
+    }
+    if (intprs(arg,&cn) == NULL) {
+      gaprnt (0,"QUERY error: color# should be an integer.\n");
+      return (1);
+    }
+    if (cn < 0) {
+      gaprnt (0,"QUERY error: color# should be non-negative.\n");
+      return (1);
+    }
+    if (cn >= COLORMAX) {
+      gaprnt (0,"QUERY error: color# > maximum colors allowed.\n");
+      return (1);
+    }
+
+    gxdbqcol(cn, &dbq);
+    if (dbq.tile == -999) {
+      snprintf(pout,1255," R = %d  G = %d  B = %d  A = %d\n",
+                           dbq.red,dbq.green,dbq.blue,dbq.alpha);
+      gaprnt (2,pout);
+    } else {
+      gaprnt (0,"QUERY warn: this color# represents a tile\n");
+      snprintf(pout,1255," T = %d\n",dbq.tile);
+      gaprnt (2,pout);
+    }
   }
   else if (cmpwrd(arg,"undef")) {
     snprintf(pout,1255,"Output undef value is set to %12f\n",pcm->undef);
@@ -2946,7 +2978,7 @@ gadouble minvals[4], maxvals[4],dval;
     gaprnt(2,pout);
   }
   else if (cmpwrd(arg,"font")) {
-    /* Check if user provided a font number, otherwise use use current default font */
+    /* Check if user provided a font number, otherwise use current default font */
     if ((arg = nxtwrd (arg)) == NULL) {
       fn = gxqdf();
     } else {
