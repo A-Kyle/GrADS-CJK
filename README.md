@@ -16,8 +16,8 @@ A few examples are:
 - To use mathematical symbols (e.g., from Greek) beyond those provided by default font #3
 - To use icons, pictograms, dingbats, etc.
 
-The user must be sure to load a viable
-font that includes the symbols they want to use via `set font <font number> file <font file path>` 
+The user must be sure to load a viable font with a character map 
+that includes the symbols they want to use via `set font <font number> file <font file path>` 
 in GrADS. If a symbol to be drawn is not found in the set font, an empty square character
 will be drawn instead.
 
