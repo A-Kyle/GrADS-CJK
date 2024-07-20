@@ -8,11 +8,18 @@ The code must be compiled from source, but the user does
 not need to fetch any libraries that GrADS doesn't normally require.
 
 If successful, GrADS will process user inputs as UTF-8 encoded strings, 
-which enables the use of user-defined fonts that can cover a vast number 
-of languages, including symbol-rich CJK languages 
-(Chinese, Japanese, Korean). The user must be sure to load a viable
+which enables the use of symbols beyond the ASCII table for various purposes. 
+A few examples are:
+- To use symbol-rich CJK languages (Chinese, Japanese, Korean)
+- To use glyphs with diacritics (accent marks)
+- To use Cyrillic script
+- To use mathematical symbols (e.g., from Greek) beyond those provided by default font #3
+- To use icons, pictograms, dingbats, etc.
+
+The user must be sure to load a viable
 font that includes the symbols they want to use via `set font <font number> file <font file path>` 
-in GrADS.
+in GrADS. If a symbol to be drawn is not found in the set font, an empty square character
+will be drawn instead.
 
 > [!NOTE]
 > The sizing and kerning of individual symbols in these new procedures for UTF-8 strings are following default, English-based and static procedures in GrADS. That means for languages where the kerning/sizing of symbols is quite different from Latin languages, the customizations here may be insufficient.
