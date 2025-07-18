@@ -1,0 +1,57 @@
+sudo apt-get install dpkg-dev
+apt-get source grads
+sudo apt-get install pkg-config
+sudo apt-get install libgd-dev
+sudo apt-get install libcairo2-dev
+sudo apt-get install libreadline-dev
+sudo apt-get install libgeotiff-dev
+sudo apt-get install libshp-dev
+sudo apt-get install libgrib2c-dev
+sudo apt-get install libhdf4-dev
+sudo apt-get install libnetcdf-dev
+sudo apt-get install libnetcdff-dev
+sudo apt-get install libxmu-dev
+sudo apt-get install libxaw7-dev
+sudo apt-get install libsx-dev
+sudo apt-get install libgadap-dev
+sudo apt-get install libxml2-dev
+
+hdf5:
+    sudo apt-get install libhdf5-dev
+    if ./configure fails check for H5fopen in -lhdf5,
+      link libhdf5.a, libhdf5.so (etc.) lib files from wherever they were installed 
+      to /usr/lib/ or some other directory that the configure script can find the 
+      hdf5 libraries 
+      e.g., your hdf5 libs may be located in /usr/lib/x86_64-linux-gnu/hdf5/serial/
+      if you don't know where hdf5 was installed, try:
+        whereis hdf5
+      or:        
+        dpkg --listfiles libhdf5-dev
+      Similarly, you may need to link the include files from hdf5
+      from wherever they were put to /usr/include/hdf5/
+      (e.g., my include files were placed in /usr/include/hdf5/serial/, so
+      I linked to them in /usr/include/hdf5/)
+
+
+udunits:
+    sudo apt-add-repository universe
+    sudo apt-get install libudunits2-dev
+    link libudunits2 .a, .so, etc. files to /usr/lib/, rename as libudunits (no ending 2)
+
+libpng15: 
+    download tarball, unpack, make, make install
+    make sure that your configuration can find the libpng libraries
+      you may need to move the libpng(15) files to /usr/lib or somewhere
+      similar
+
+libjasper:
+    sudo add-apt-repository "deb http://security.ubuntu.com/ubuntu xenial-security main"
+    sudo apt update
+      (this will likely require adding authentication keys to apt-key or whatever replaces it)
+    sudo apt install libjasper-dev
+
+modify environment:
+    export PKG_CONFIG="/usr/bin/pkg-config"
+    export PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig/"
+    export GAUDPT="<grads directory>/udpt" --> create the udpt file
+    export GADDIR="<grads directory>/data"

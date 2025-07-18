@@ -9,6 +9,7 @@ tmp/
 utf8/
 scripts/
 .pc/
+shp/
 src/*.o
 src/*.lo
 src/*.la
@@ -22,7 +23,6 @@ src/Makefile*
 src/stamp-h1
 src/buildinfo.h
 src/.libs/
-grads_log.txt
 config.*
 udpt
 Makefile
