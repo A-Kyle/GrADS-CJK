@@ -1,0 +1,14 @@
+doc/sample.ncdump
+doc/sample_sfc.ctl
+doc/sample_tau.ctl
+doc/sample_temp.ctl
+doc/sample_uv.ctl
+doc/sample_w.ctl
+doc/wrfgrid.ctl
+doc/wrf.ncdump
+doc/wrfvars.ctl
+doc/xdfsample1.txt
+doc/xdfsample2.txt
+doc/model.dat
+doc/model.ctl
+doc/sample

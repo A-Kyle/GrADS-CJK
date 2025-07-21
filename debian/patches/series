@@ -1,0 +1,16 @@
+privacy-include-icon.patch
+nc-config.patch
+hdf4-alt.patch
+supplibs.patch
+paths.patch
+udunits2.patch
+asneeded.patch
+timeunits_parse.patch
+format-security.patch
+reproducible-builds.patch
+png16.patch
+remove-jpeg.patch
+static.patch
+shp-fix.patch
+cairo-fix.patch
+gadap-fix.patch

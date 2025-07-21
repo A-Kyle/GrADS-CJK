@@ -1,0 +1,16 @@
+Index: grads-2.2.1/configure.ac
+===================================================================
+--- grads-2.2.1.orig/configure.ac
++++ grads-2.2.1/configure.ac
+@@ -585,11 +585,9 @@ fi
+ # check in system locations
+ if test "$use_cairo" != "yes" -a "$ga_dyn_supplibs" = "yes" ; then
+   echo looking in other system locations
+-  GA_CHECK_LIB_CAIRO([
+     use_cairo='yes'
+     cairo_inc=$CAIRO_CFLAGS
+     cairo_libs=$CAIRO_LIBS
+-  ])
+ fi
+ # set output variables
+ if test "$use_cairo" != "yes" ; then

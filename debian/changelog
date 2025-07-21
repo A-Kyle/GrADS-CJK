@@ -1,0 +1,279 @@
+grads (3:2.2.1-4build1) jammy; urgency=medium
+
+  * No-change rebuild against libnetcdf19
+
+ -- Graham Inggs <ginggs@ubuntu.com>  Fri, 29 Oct 2021 10:17:12 +0000
+
+grads (3:2.2.1-4) unstable; urgency=medium
+
+  * Rebuild against libdap (>= 3.20.7)
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Tue, 02 Feb 2021 09:27:21 +0000
+
+grads (3:2.2.1-3) unstable; urgency=medium
+
+  * Use debhelper-compat 13
+  * Use libeditreadline-dev rather than libreadline-dev to avoid legal
+    conflict with GPL-3. Closes: #979093.
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Sun, 24 Jan 2021 19:38:24 +0000
+
+grads (3:2.2.1-2) unstable; urgency=medium
+
+  * Use debhelper-compat (=12)
+  * Standards-Version: 4.4.0
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Mon, 05 Aug 2019 14:07:36 +0100
+
+grads (3:2.2.1-1) unstable; urgency=medium
+
+  * New upstream release
+    - geotiff-fix.patch now upstream
+  * Standards-Version: 4.1.5
+  * Depend on libgadap-dev >= 2.0-11 for fPIC build
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Tue, 17 Jul 2018 09:45:02 +0100
+
+grads (3:2.2.0-2) unstable; urgency=medium
+
+  * Drop obsolete B-D on dpkg-dev (was needed for M-A)
+  * Standards-Version: 4.1.3
+  * Move VCS to salsa.debian.org
+  * Drop obsolete call to autoreconf
+  * Provide /usr/share/grads/udpt file
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Thu, 15 Feb 2018 10:47:03 +0000
+
+grads (3:2.2.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * Patch needed to pass geotiff_inc 
+  * Drop redundant Build-Depends on auto*
+  * Standards-Version: 4.1.1. No changes required
+  * Relax version dependency on libsx-dev
+  * Drop build-dependency on transitional libhdf5-serial-dev. 
+    Closes: #879138, #740013
+  * Patch needed to build: remove static on gcmn.
+  * Include favicon.png rather than read remotely: privacy breach
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Fri, 20 Oct 2017 09:38:05 +0100
+
+grads (3:2.1.1.b0-1) unstable; urgency=medium
+
+  * New upstream release
+    - build against libdap3.19, libsx2.09
+  * B-D on libssl-dev now needed
+  * Standards-Version: 4.0.0; no changes required
+  * Change to match overrides: from science-extra to utils-optional
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Fri, 14 Jul 2017 07:16:38 +0100
+
+grads (3:2.1.0-2) unstable; urgency=medium
+
+  * Add Desktop file and icon
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Sat, 24 Dec 2016 17:39:31 +0000
+
+grads (3:2.1.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * Update home page
+  * Depend on libgadap >= 2.0-7 for -fPIC. Closes: #841493.
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Fri, 21 Oct 2016 22:02:16 +0100
+
+grads (2:2.1.a3-4) unstable; urgency=medium
+
+  * Rebuild against libgadap-dev >= 2.0-6 for libdap 3.18.0 compatability
+    Closes: #836338
+  * DH_COMPAT=10
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Sun, 04 Sep 2016 09:15:13 +0100
+
+grads (2:2.1.a3-3) unstable; urgency=medium
+
+  * Drop kernel name from configure, for reproducible builds
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Sat, 09 Jul 2016 12:10:36 +0100
+
+grads (2:2.1.a3-2) unstable; urgency=medium
+
+  * Remove unnecessary dependencies on openjpeg, libpng. Closes: #826815
+  * Add debian/gpb.conf file
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Sat, 11 Jun 2016 08:52:20 +0100
+
+grads (2:2.1.a3-1) unstable; urgency=medium
+
+  * Standards-Version: 3.9.8
+  * Add data, examples tarballs
+  * Depend on libgrib2c-dev >= 1.6.0-3 to remove Jasper. Closes: #818214.
+  * Depend on libpng-dev >= 1.6.21; png16 transition done.
+  * Enable png16 patch, look for it, not png15
+  * Patch to use NC_CONFIG in /usr/bin
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Tue, 24 May 2016 14:13:26 +0100
+
+grads (2:2.1~a3-1) experimental; urgency=medium
+
+  * New upstream release.
+  * B-D on libaec-dev, remove libsz-not-present patch as libaec provides
+    libsz
+  * Build against libcairo2-dev, libpng-dev for new UX
+  * Drop libjasper in favour of libopenjpeg.
+  * Standards-Version: 3.9.7. No changes required. 
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Thu, 07 Apr 2016 09:47:30 +0100
+
+grads (2:2.0.2-7.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Rebuild with libnetcdf 4.4.0~rc2 for netcdf transition.
+
+ -- Bas Couwenberg <sebastic@debian.org>  Mon, 24 Aug 2015 13:52:00 +0200
+
+grads (2:2.0.2-7) unstable; urgency=medium
+
+  * test Build against hdf5 1.8.15 
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Sun, 16 Aug 2015 03:58:23 +0100
+
+grads (2:2.0.2-6) unstable; urgency=medium
+
+  * Build against libdap for g++5 transition
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Sat, 15 Aug 2015 07:24:33 +0100
+
+grads (2:2.0.2-5) unstable; urgency=medium
+
+  * Change libgd2-xpm-dev -> libgd-dev. 
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Tue, 07 Jul 2015 01:17:12 +0100
+
+grads (2:2.0.2-4) unstable; urgency=medium
+
+  * Build against libdap 3.14.0 for transition.
+  * Remove build_date from config scripts to make build bit-reproducible.
+  * Move to Standards-Version: 3.9.6
+  * Add Vcs-Git pointing to git repo in debian-science. 
+  * Require libsx-dev >> 2.05-7
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Mon, 06 Jul 2015 11:28:06 +0100
+
+grads (2:2.0.2-3) unstable; urgency=low
+
+  [ Gilles Filippini ]
+  * Support hdf5 1.8.13 new packaging layout.  Closes: #756666.
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Fri, 01 Aug 2014 16:36:33 +0100
+
+grads (2:2.0.2-2) unstable; urgency=medium
+
+  * Remove hard-coded references to 2.0.1 files.
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Tue, 17 Jun 2014 09:43:48 +0100
+
+grads (2:2.0.2-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Tue, 17 Jun 2014 07:39:22 +0100
+
+grads (2:2.0.1-2) unstable; urgency=medium
+
+  * Move to debhelper 9
+  * Now at Standards-Version: 3.9.5 
+  * Change to Priority: extra because we depend on hdf4-alt, etc.
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Wed, 26 Feb 2014 09:30:59 +0000
+
+grads (2:2.0.1-1) unstable; urgency=low
+
+  * New upstream build.
+  * Build against libhdf4-alt-dev. Closes: #655869.
+  * Now use gadap for in-situ data. 
+  * Now at Standards-Version: 3.9.3
+  * New epoch needed as 2.0.1 < 2.0.a9. 
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Wed, 19 Sep 2012 15:25:13 +0100
+
+grads (2.0.a9-4) unstable; urgency=low
+
+  * B-D on dh-autoreconf; use dh -- with autoreconf 
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Sun, 23 Oct 2011 21:53:28 +0100
+
+grads (2.0.a9-3) unstable; urgency=low
+
+  * B-D on netcdf-bin for nc-config, or ./configure may behave differently.
+  * Enable  --enable-dyn-supplibs for dynamic linking. 
+  * Enable --with-hdf4-include to find HDF4 ; patch needed to compile.
+  * Patch for format-security error. Closes: #646268.
+  * Autogenerated gunk breaks building from source. Fix. Closes: #643144.
+  * Remove debian-changes-* patches; 
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Sun, 23 Oct 2011 17:54:31 +0100
+
+grads (2.0.a9-2) unstable; urgency=low
+
+  * Build with libhdf5-dev | libhdf5-serial-dev. Closes: #634524.
+  * Build MPI version if DEB_BUILD_OPTIONS=mpi
+  * Add --with-dap as libdap is now in Debian. 
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Sat, 10 Sep 2011 11:53:29 +0100
+
+grads (2.0.a9-1) unstable; urgency=low
+
+  * New upstream release.
+  * Now at Standards-Version: 3.9.2.
+  * Fix by Steve Langasek to avoid hard-coded /usr/lib paths; 
+    for multilib. Closes: #622320.
+  * Include libshp-dev for shapefile support in new version. 
+  * Include patch from Nicolai Strange fixing netcdf time units parse bug.
+    Closes: #587496. 
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Tue, 12 Apr 2011 14:31:38 +0100
+
+grads (2.0.a8-2) unstable; urgency=low
+
+  * Add libgd2-xpm-dev to Build-Depends to build the grib2scan and gxtran
+    binaries (Closes: #608584). Thanks to Salvatore Bonaccorso.
+  * Move to Standards-Version: 3.9.1. No changes required. 
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Sun, 02 Jan 2011 02:16:47 +0000
+
+grads (2.0.a8-1) unstable; urgency=low
+
+  * New upstream release. 
+  * Add SUPPLIBS to environment to add netcdf, geotiff properly.
+  * Enabled HDF5, netCDF-4, geotiff properly; disabled netCDF-4 
+    Closes: #571048.
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Sun, 09 May 2010 14:11:05 +0100
+
+grads (2.0.a7.1-4) unstable; urgency=low
+
+  * Move to Source format 3.0. Remove dep. on quilt.
+  * Standards-Version: 3.8.4. No changes required. 
+  * Add DEP-3 tags to patches.
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Fri, 26 Feb 2010 16:47:44 +0000
+
+grads (2.0.a7.1-3) unstable; urgency=low
+
+  * Add Build-Depends: linxmu-headers. Closes: #551446.
+  * Change section to Science.
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Mon, 19 Oct 2009 17:40:59 +0100
+
+grads (2.0.a7.1-2) unstable; urgency=low
+
+  * Add Build-Depends: libx11-dev. Closes: #550307. 
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Tue, 13 Oct 2009 15:48:08 +0100
+
+grads (2.0.a7.1-1) unstable; urgency=low
+
+  * Initial release. (Closes: #540545)
+
+ -- Alastair McKinstry <mckinstry@debian.org>  Sun, 04 Oct 2009 12:38:20 +0100

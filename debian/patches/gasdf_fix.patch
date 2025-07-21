@@ -1,0 +1,19 @@
+Author: Alastair McKinstry <mckinstry@debian.org>
+Description: Fixes build failure on building netcdf-4 but not hdf-4
+Last-Updated: 2010-05-09
+Forwareded: no
+
+Index: grads-2.0.a8/src/gasdf.c
+===================================================================
+--- grads-2.0.a8.orig/src/gasdf.c	2010-05-09 18:30:55.000000000 +0100
++++ grads-2.0.a8/src/gasdf.c	2010-05-09 18:31:44.000000000 +0100
+@@ -2172,6 +2172,9 @@
+ char sdsname[H4_MAX_NC_NAME+1];
+ char name[H4_MAX_NC_NAME+1],dimname[H4_MAX_NC_NAME+1];
+ #endif
++#if (USENETCDF==1) && !(USEHDF ==1)
++char name[MAX_NC_NAME+1];
++#endif
+ 
+   if ((pfi->name == NULL) || (strlen (pfi->name) == 0)) return Failure;
+ 

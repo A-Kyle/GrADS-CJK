@@ -1,0 +1,13 @@
+Index: grads-2.2.1/configure.ac
+===================================================================
+--- grads-2.2.1.orig/configure.ac
++++ grads-2.2.1/configure.ac
+@@ -719,7 +719,7 @@ if test "$have_udunits" = "yes" ; then
+     [ AC_CHECK_LIB([netcdf], [main],
+       [ use_nc="yes"
+         # check if we have nc-config utility
+-        NC_CONFIG=${ga_supplib_dir}/bin/nc-config
++        NC_CONFIG=/usr/bin/nc-config
+ 	if test ! -f "$NC_CONFIG" || test ! -x "$NC_CONFIG"; then
+           use_nc4="no"
+ #          GA_SET_LIB_VAR(nc_libs, [udunits netcdf])

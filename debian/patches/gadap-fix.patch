@@ -1,0 +1,16 @@
+Index: grads-2.2.1/configure.ac
+===================================================================
+--- grads-2.2.1.orig/configure.ac
++++ grads-2.2.1/configure.ac
+@@ -803,10 +803,8 @@ if test "x$with_gadap" != xno ; then
+ # check in system locations
+   if test $use_gadap != "yes" -a "$ga_dyn_supplibs" = "yes" ; then
+     echo looking in other system locations
+-    GA_CHECK_LIB_GADAP(
+-    [ use_gadap=yes 
++    use_gadap=yes 
+       gadap_libs=$GADAP_LIBS
+-    ])
+   fi
+ # set output variables
+   if test $use_gadap != "yes" ; then

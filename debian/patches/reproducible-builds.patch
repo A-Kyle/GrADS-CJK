@@ -1,0 +1,40 @@
+Author: Alastair McKinstry <mckinstry@debian.org>
+Description: Remove build_date so that build is bit-reproducible.
+Last-Updated: 2016-07-10
+Forwarded: no
+
+Index: grads-2.2.1/configure
+===================================================================
+--- grads-2.2.1.orig/configure
++++ grads-2.2.1/configure
+@@ -23559,7 +23559,7 @@ echo 2.2.1 > src/VERSION
+ echo "configure: creating src/buildinfo.h"
+ build_info="Configured on `date +%D` for ${host}"
+ mkdir -p src
+-echo "static char *buildinfo = \"${build_info}\";" > src/buildinfo.h
++echo "static char *buildinfo = \"${build_host}\";" > src/buildinfo.h
+ 
+ ac_config_files="$ac_config_files Makefile src/Makefile"
+ 
+Index: grads-2.2.1/configure.ac
+===================================================================
+--- grads-2.2.1.orig/configure.ac
++++ grads-2.2.1/configure.ac
+@@ -896,7 +896,7 @@ echo AC_PACKAGE_VERSION > src/VERSION
+ echo "configure: creating src/buildinfo.h"
+ build_info="Configured on `date +%D` for ${host}"
+ mkdir -p src
+-echo "static char *buildinfo = \"${build_info}\";" > src/buildinfo.h
++echo "static char *buildinfo = \"${build_host}\";" > src/buildinfo.h
+ 
+ LINK_AS_NEEDED
+ 
+@@ -910,7 +910,7 @@ AC_OUTPUT
+    echo 
+    echo \
+ "  +=========================================================================+"
+-   echo "   GrADS "AC_PACKAGE_VERSION ":" $build_info
++   echo "   GrADS "AC_PACKAGE_VERSION ":" " DEBIAN "
+    echo \
+ "  +=========================================================================+"
+    echo     

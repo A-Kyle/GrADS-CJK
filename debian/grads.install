@@ -1,0 +1,16 @@
+data/font0.dat	/usr/share/grads
+data/font1.dat	/usr/share/grads
+data/font2.dat	/usr/share/grads
+data/font3.dat	/usr/share/grads
+data/font4.dat	/usr/share/grads
+data/font5.dat	/usr/share/grads
+data/hires	/usr/share/grads
+data/lowres	/usr/share/grads
+data/mres	/usr/share/grads
+data/tables/*	/usr/share/grads/tables
+doc/*.html	/usr/share/doc/grads/html
+doc/*.css	/usr/share/doc/grads/html
+doc/images/*	/usr/share/doc/grads/html/images
+debian/grads.png	/usr/share/pixmaps
+debian/grads.desktop	/usr/share/applications
+debian/udpt		/usr/share/grads

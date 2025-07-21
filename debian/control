@@ -1,0 +1,63 @@
+Source: grads
+Section: utils
+Priority: optional
+Maintainer: Alastair McKinstry <mckinstry@debian.org>
+Build-Depends: debhelper-compat (= 13),
+ pkg-config, 
+ libeditreadline-dev,
+ libgeotiff-dev, 
+ libssl-dev,
+ libgrib2c-dev (>= 1.6.0-3), 
+ libnetcdf-dev,  netcdf-bin,
+ zlib1g-dev, 
+ libudunits2-dev,  
+ libhdf5-serial-dev | libhdf5-dev, 
+ libdap-dev (>= 3.20.7), 
+ libsx-dev (>= 2.08), 
+ libx11-dev, 
+ libxmu-headers, 
+ libgd-dev, 
+ libshp-dev, 
+ libhdf4-alt-dev, 
+ libgadap-dev (>= 2.0-11), 
+ libaec-dev,
+ libcairo2-dev
+Build-Conflicts: autoconf2.13
+Standards-Version: 4.5.1
+Homepage: http://cola.gmu.edu/grads
+Vcs-Browser: https://salsa.debian.org:/science-team/grads.git
+Vcs-Git: https://salsa.debian.org:/science-team/grads.git
+
+Package: grads
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: Grid Analysis and Display System for earth science data
+ The Grid Analysis and Display System (GrADS) is an interactive desktop tool
+ that is used for easy access, manipulation, and visualization of earth 
+ science data. The format of the data may be either binary, GRIB, NetCDF, or 
+ HDF-SDS (Scientific Data Sets). GrADS has been implemented worldwide on 
+ a variety of commonly used operating systems and is freely distributed 
+ over the Internet.
+ .
+ GrADS uses a 4-Dimensional data environment: longitude, latitude, 
+ vertical level, and time. Data sets are placed within the 4-D space 
+ by use of a data descriptor file. GrADS interprets station data as well as
+ gridded data, and the grids may be regular, non-linearly spaced, gaussian, or
+ of variable resolution. Data from different data sets may be graphically 
+ overlaid, with correct spatial and time registration. Operations are executed
+ interactively by entering FORTRAN-like expressions at the command line. 
+ A rich set of built-in functions are provided, but users may also add their 
+ own functions as external routines written in any programming language.
+ .
+ Data may be displayed using a variety of graphical techniques: line and 
+ bar graphs, scatter plots, smoothed contours, shaded contours, streamlines, 
+ wind vectors, grid boxes, shaded grid boxes, and station model plots. 
+ Graphics may be output in PostScript or image formats. GrADS provides 
+ geophysically intuitive defaults, but the user has the option to control 
+ all aspects of graphics output.
+ .
+ GrADS has a programmable interface (scripting language) that allows for 
+ sophisticated analysis and display applications. Use scripts to display 
+ buttons and dropmenus as well as graphics, and then take action based on user 
+ point-and-clicks. GrADS can be run in batch mode, and the scripting language
+ facilitates using GrADS to do long overnight batch jobs. 

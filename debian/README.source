@@ -1,0 +1,16 @@
+This package includes patches that are managed under 'quilt', so  'dpkg-source -x' is not sufficient to get a complete
+build. To get the actual source, do:
+ $ dpkg-source -x
+ $ ./debian/rules patch
+
+Patches:
+(1) udunits2.patch
+Under Debian, the udunits library is libudunits2.a, not libudunits.a. This patch fixes this.
+(2) libsx.patch
+Add the correct path for this library (/usr/lib).
+(3) as-needed.patch
+Ass the --as-needed flag to limit linking if possible.
+
+Regards
+Alastair McKinstry, 2009-09-13
+

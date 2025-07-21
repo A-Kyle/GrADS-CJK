@@ -1,0 +1,18 @@
+Index: grads-2.2.1/configure.ac
+===================================================================
+--- grads-2.2.1.orig/configure.ac
++++ grads-2.2.1/configure.ac
+@@ -418,10 +418,9 @@ fi
+ # check in system locations
+ if test "$use_shp" != "yes" -a "$ga_dyn_supplibs" = "yes" ; then
+   echo looking in other system locations
+-  GA_CHECK_LIB_SHP(
+-  [ use_shp=yes 
+-    shp_libs=$SHP_LIBS
+-  ])
++  Hack out missing fn
++  use_shp=yes 
++  shp_libs=$SHP_LIBS
+ fi
+ # set output variables
+ if test "$use_shp" != "yes" ; then

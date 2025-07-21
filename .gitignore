@@ -1,11 +1,6 @@
 bin/
-data/
-debian/
-doc/
-fonts/
 lib/
 supplibs/
-tmp/
 utf8/
 scripts/
 .pc/
