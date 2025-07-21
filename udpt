@@ -1,0 +1,11 @@
+# Type     Name     Full path to shared object file
+# ----     ----     -------------------------------
+gxdisplay  Cairo    /home/stygian/grads-2.2.1/lib/libgxdCairo.so
+gxdisplay  X11      /home/stygian/grads-2.2.1/lib/libgxdX11.so
+gxdisplay  gxdummy  /home/stygian/grads-2.2.1/lib/libgxdummy.so
+*
+gxprint    Cairo    /home/stygian/grads-2.2.1/lib/libgxpCairo.so
+gxprint    GD       /home/stygian/grads-2.2.1/lib/libgxpGD.so
+gxprint    gxdummy  /home/stygian/grads-2.2.1/lib/libgxdummy.so
+*
+function   dothis   /home/username/grads/udp/dothis.so

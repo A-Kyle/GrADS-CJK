@@ -1,0 +1,290 @@
+v0.0.2 05 Sep 2023
+
+This directory contains sources and headers that enable UTF-8
+string rendering via Cairo in GrADS 2.2.1. There is also a new
+command to draw strings vertically. These modifications
+are custom and certainly do not come with any sort of warranty.
+They are not an official capability or feature for GrADS, but
+you do not need any libraries that GrADS doesn't normally expect.
+
+To utilize these features, you must build GrADS with Cairo using
+the following modified files in src/:
+
+gauser.c
+gxchpl.c
+gxsubs.c
+gxX.c
+gxX11.c
+gxC.c
+gxmeta.c
+gxprint.c
+gxprintGD.c
+gxdummy.c
+gx.h
+gxC.h
+
+If successful, you can enable/disable this feature as a
+temporary text override by using a back quote (`) followed 
+by the letter u anywhere you could enter a string 
+(draw title, draw xlab, set xlabs, etc.; 
+see GrADS font control docs). Doing this makes it so 
+GrADS processes user inputs as UTF-8 encoded strings, 
+which enables the use of fonts that cover a vast number 
+of languages, including symbol-rich CJK languages 
+(Chinese, Japanese, Korean). 
+
+For example, let's say you want to add katakana 
+for kilometers to your height contour labels (1 km, 2 km, etc.).
+In English, you could simply add "km" to labels by doing:
+
+    'set clab %.0fkm'
+
+before you display the height field. In vanilla GrADS, if you try
+to type in katakana for km (キロ) instead of "km," trying to 
+display the height field will lead to internal errors that 
+neuter all draw/print features, if it doesn't just crash.
+With these code modifications built, you can do this...
+
+    'set clab %.0f`f11`uキロ'
+
+And, provided that you set everything up right, this
+should work! Some more explanation: 
+
+    - The "`f11" part of the command tells GrADS
+      to use font 11 (an external font specified by a file,
+      which I would have to have defined earlier)
+      for the part of the string that follows;
+      this kind of flag is standard to GrADS and isn't new.
+      HOWEVER, in this case, the font specification is crucial,
+      because YOU MUST use a font that has UTF-8 encoded symbols
+      for this to work. Importantly, if you use any of the GrADS
+      default fonts or Hershey fonts, this WILL FAIL and will
+      probably lead to all sorts of errors.
+      Alternatively, if you intend to use font 11 generally in the
+      example context above, you could just set font to 11
+      by default and omit the "`f11" altogether:
+
+          'set font 11' ;* OR 'set font 11 file <your font file here>'
+          'set clab %.0f`uキロ'
+
+    - The "`u" part enables UTF-8 encoded string processing.
+      If you happen to also include ASCII or use characters
+      represented with 1 byte with UTF-8 string processing,
+      there should not be any problems. So, while the following
+      command would be a pointless use of this feature:
+
+          'draw title `uSea-surface Temperature [K]' 
+
+      it should still work as you might expect without issues.
+    
+If you want to process only parts of a string as UTF-8,
+then you can use multiple `u flags (like an on/off switch)
+to mark the parts of your string accordingly. 
+By default, UTF-8 decoding is disabled.
+
+    Example:
+    'draw title Hello `uおはよう`u World `u世界'
+                ------  ========  -------  ====
+
+In the above example, parts of the string underlined
+by "-" are not interpreted as UTF-8. Parts of the string
+underlined by "=" are interpreted as UTF-8. Alternatively, you 
+could achieve the same thing in the above example by
+doing:
+
+    'draw title `uHello おはよう World 世界' 
+                  =========================
+
+Because the UTF-8 processor should interpret the ASCII
+standard characters ('H', 'e', 'l', 'o', etc.) fine,
+the result here should be the same as the first example.
+But in doing this, GrADS will be doing more work
+internally as it will anticipate UTF-8 encoding throughout
+the string. In other words, using `u at the start of 
+any string where you might conceivably use UTF-8 encoded 
+symbols should work fine but will make GrADS do a little
+bit more work -- honestly, it's probably not enough to
+matter time wise. The opposite side of the coin, 
+not using `u wherever you might use UTF-8 encoding, 
+is dangerous! If you happen to forget to use `u 
+before UTF-8 encoded symbols, GrADS will likely break down 
+(often quietly -- ugh!) and need restarting.
+
+A note on some language-specific issues that are
+readily obvious at this time. The sizing and kerning of
+individual symbols in these new procedures for UTF-8 strings 
+are following default, English-based and static procedures in 
+GrADS. That means for some languages where the kerning/sizing 
+of symbols is quite different from Latin languages 
+(think Arabic languages), the result may look quite ugly,
+at least for now.
+
+Lastly, there is also a new draw command that the user can
+use called vstring. It functions the same as "draw string"
+commands with the same arguments, and also refers to all
+set string options in the same way (size, etc), but it 
+renders the symbols along the vertical. The following example:
+
+    "set string 1 bl" ;* bottom-left justify
+    "draw vstring 3 3 Hello"
+
+will draw:
+
+     H
+     e
+     l
+     l
+    .o
+
+where the period represents X=3, Y=3 (the bottom-left corner
+of the string). Rotations also work. 
+NOTE: Default Hershey fonts are buggy with vstring 
+      due to incorrect spacing between characters.
+
+
+questions:
+Kyle Ahern - kyle . k . ahern at gmail d０t com
+
+
+
+
+-------------------------------------
+modded files and random notes:
+gxchpl.c :  gxchpl with CHAR*, originally runs through the string to draw each char...
+            Now, we try to parse the string to interpret char* UTF-8 symbols
+            gxchpl calls gxdrawch and gxchplc (Hershey) using char, OR
+            gxchpl calls gxdrawu8 using char*... 
+            gxchln calls gxqchl using char, OR
+            gxchln calls gxqu8l using char*... (done?)
+            Blitting for Hershey fonts using UTF-8 should probably be disabled for now ...
+            ... do Hershey fonts even have UTF-8 symbols?
+            ... apparently there are some non-ascii characters, but they are
+                scattered about and incomplete, especially relative to UTF-8.
+            new func: iscbyte (local scope) 
+
+gxsubs.c :  gxdrawch with char calls gxdch, gxpqchl, houtch
+            gxdrawu8 with char* calls gxdu8, gxpqu8l, houtu8 (done?)
+            gxqchl with char  calls gxdqchl or gxpqchl (query w of char)
+            gxqu8l with char* calls gxdqu8l or gxpqu8l (query w of char*) (done?)
+            gxpch, gxpu8 pointers passed to dlsym & psubs
+            new func: gxdrawu8, gxdu8, gxpu8, houtu8, gxqu8l, gxdqu8l, gxpqu8l (7)
+
+gxX.c : gxdch with char calls gxCch 
+        gxdu8 calls gxCu8 here using char* (done?)
+        gxdqchl with char calls gxCqchl
+        gxdqu8l with char* calls gxCqu8l (done?)
+        new func: gxCu8, gxCqu8l (2)
+
+gxX11.c : gxdu8 - returns error code?
+
+gxC.c : gxCqchl with char queries char width via Cairo
+        gxCqu8l with char* queries char* width via Cairo (done?)
+        gxCch: Cairo FINALLY draws char
+        gxCu8: Cairo FINALLY draws char* (UTF-8 sym) (done?)
+
+gxmeta.c : houtch called by gxdrawch, calls no functions with char
+           houtu8 called by gxdrawu8, calls no functions with char* (done?)
+           calls gxdch / gxpch
+           calls gxdu8 / gxpu8 (done?)
+
+gxprint.c : gxpch with char calls gxCch
+            gxpu8 with char* calls gxCu8 (done?)
+            gxpqchl with char calls gxCqchl
+            gxpqu8l with char* calls gxCqu8l (done?)
+
+gxprintGD.c : gxpch with char returns 0.
+              gxpu8 with char* returns 0. (done?)
+              gxpqchl with char returns -999.
+              gxpqu8l with char* returns -999. (done?)
+
+gxdummy.c : gxdch, gxpch, gxdqchl, gxpqchl
+            gxdu8, gxpu8, gxdqu8l, gxpqu8l (done?)
+
+new function declarations (right), with their non-UTF-8 origin (left):
+gx.h (7) :  gxpch    <-> gxpu8
+            gxdch    <-> gxdu8
+            gxdrawch <-> gxdrawu8
+            houtch   <-> houtu8
+            gxdqchl  <-> gxdqu8l
+            gxpqchl  <-> gxpqu8l
+            gxqchl   <-> gxqu8l
+
+gxC.h (2) : gxCch    <-> gxCu8
+            gxCqchl  <-> gxCqu8l
+
+
+-------------------------------------
+vertical string draw notes:
+
+gauser.c :  uses keyword "string" after "draw" to call gxchln, gxchpl
+            uses keyword "vstring" to call gxchlnv, gxchplv
+            new: gxchlnv
+                 gxchplv
+
+gxchpl.c :  gxchpl runs through the string to draw each symbol horizontally
+            gxchplv runs through the string to draw each symbol vertically (done)
+            gxchplv calls gxdrawchv for cairo (in gxsubs.c)
+            hershey doesn't have a special function for it
+
+gxsubs.c :  gxqchh queries the height of a character with gxdqchh or gxpqchh
+            gxdrawchv is just like gxdrawch except it returns char height.
+            gxdrawch calls gxdch or gxpqchl for char width. 
+            gxdrawch calls gxppvp2 for scaling.
+            gxdrawchv calls gxdchv or gxpqchh for char height. (done)
+            gxdrawchv calls gxppvp2h for scaling. (done) 
+            gxqu8h queries the height of a symbol with gxdqu8h or gxpqu8h
+            gxdrawu8  calls gxdu8  or gxpqu8l for char width.
+            gxdrawu8v calls gxdu8v or gxpqu8h for char height. (done)
+            new: gxqchh
+                 gxdqchh
+                 gxpqchh
+                 gxdrawchv
+                 gxdchv
+
+                 gxppvp2h
+                 
+                 gxqu8h
+                 gxdqu8h
+                 gxpqu8h
+                 gxdrawu8v
+                 gxdu8v
+            
+gxX.c    :  gxdchv calls gxCchv, which returns height of char drawn (done)
+            gxdu8v calls gxCu8v, which returns height of symbol drawn (done)
+            new: gxCchv
+                 gxCu8v 
+            
+gxC.c    :  gxCchv returns height of char drawn (done)
+            gxCu8v returns height of UTF8 symbol drawn (done)
+            gxCqchh returns height of character (done)
+            gxCqu8h returns height of UTF8 symbol (done)
+            new: gxCqchh
+                 gxCqu8h
+
+gxprint.c:  gxpqchl calls gxCqchl
+            gxpqchh calls gxCqchh (done)
+            
+gxprintGD.c: gxpqchh returns error code
+
+gxdummy.c : gxpqchh, gxdchv declared
+
+new function declarations:
+gx.h: gxchplv
+      gxchlnv
+      gxqchh
+      gxdqchh
+      gxpqchh
+      gxdrawchv
+      gxdchv
+      gxppvp2h
+      gxqu8h
+      gxdqu8h
+      gxpqu8h
+      gxdrawu8v
+      gxdu8v
+      
+gxC.h:  gxCchv
+        gxCu8v
+        gxCqchh
+        gxCqu8h
+              
